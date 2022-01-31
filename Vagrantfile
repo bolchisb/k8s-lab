@@ -12,17 +12,16 @@ Vagrant.configure("2") do |config|
       config.vm.box_version = "20211026.0.0"
       config.vm.host_name = "node1"
       # config.vm.network "public_network"
-      config.vm.network "forwarded_port", guest: 8001, host: 8001
-      config.vm.network "forwarded_port", guest: 80, host: 80
+      config.vm.network "forwarded_port", guest: 8001, host: 8002
+      config.vm.network "forwarded_port", guest: 80, host: 82
       config.vm.network "private_network", ip: "10.145.0.11"
-      config.vm.synced_folder "share/", "/home/vagrant/share", disabled: false
+      config.vm.synced_folder "share/", "/home/vagrant/share", disabled: false  #SharedFoldersEnableSymlinksCreate: false
       config.vm.provider :virtualbox do |vb|
           vb.customize ["modifyvm", :id, "--memory", "4096"]
           vb.customize ["modifyvm", :id, "--cpus", "6"]
           vb.gui = false
       end
-    #   config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/me.pub"
-      # config.vm.provision "shell", path: "config/provision_ansible.sh"
+    #   config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/me.pub"      #uncomment this if you want to use your own certs
       config.vm.provision "ansible" do |ansible|
         ansible.playbook = "config/k8s-master.yml"
         ansible.verbose = true
@@ -47,7 +46,6 @@ Vagrant.configure("2") do |config|
       config.vm.provision "ansible" do |ansible|
         ansible.playbook = "config/k8s-client.yml"
         ansible.verbose = true
-        # ansible.install_mode = "pip"  #not working on windows hosts
         ansible.version = "2.2.1.0"
         ansible.extra_vars = {
             node_ip: "10.145.0.12",
@@ -70,7 +68,6 @@ Vagrant.configure("2") do |config|
       config.vm.provision "ansible" do |ansible|
         ansible.playbook = "config/k8s-client.yml"
         ansible.verbose = true
-        # ansible.install_mode = "pip"  #not working on windows hosts
         ansible.version = "2.2.1.0"
         ansible.extra_vars = {
             node_ip: "10.145.0.13",
@@ -93,7 +90,6 @@ Vagrant.configure("2") do |config|
         config.vm.provision "ansible" do |ansible|
           ansible.playbook = "config/k8s-client.yml"
           ansible.verbose = true
-        # ansible.install_mode = "pip"  #not working on windows hosts
         ansible.version = "2.2.1.0"
           ansible.extra_vars = {
               node_ip: "10.145.0.14",
