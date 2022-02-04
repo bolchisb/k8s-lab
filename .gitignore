@@ -1,3 +1,4 @@
 .vagrant
 *.log
 vagrant_*
+share/*
